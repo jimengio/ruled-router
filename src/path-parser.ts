@@ -1,7 +1,7 @@
 import _ from "lodash";
 import produce from "immer";
 
-declare const _DEV_: boolean;
+let _DEV_: boolean = false;
 
 export interface IRouteRule {
   path: string;

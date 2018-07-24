@@ -1,6 +1,6 @@
 {
   "name": "ruled-router",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
   "main": "./lib/path-parser.js",
   "types": "./lib/ruled-router.d.ts",

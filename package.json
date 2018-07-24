@@ -1,5 +1,5 @@
 {
-  "name": "ruled-router",
+  "name": "@jimengio/ruled-router",
   "version": "0.2.2",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
   "main": "./lib/path-parser.js",

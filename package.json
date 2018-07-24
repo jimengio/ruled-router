@@ -1,16 +1,16 @@
 {
   "name": "@jimengio/ruled-router",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
   "main": "./lib/path-parser.js",
-  "types": "./lib/ruled-router.d.ts",
+  "types": "./lib/path-parser.d.ts",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier src/path-parser.ts --write",
-    "compile": "tsc src/path-parser.ts --outDir lib/"
+    "compile": "tsc -d src/path-parser.ts --outDir lib/"
   },
   "repository": {
     "type": "git",

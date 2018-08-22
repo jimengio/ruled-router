@@ -95,8 +95,6 @@ into a JSON tree:
 }
 ```
 
-Some further explanations can be found at https://github.com/beego/fi/pull/731 .
-
 ### License
 
 MIT

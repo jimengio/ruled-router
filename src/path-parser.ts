@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import { first, isEmpty, assign } from "lodash";
 import produce from "immer";
 
 let _DEV_: boolean = false;
@@ -6,7 +6,7 @@ let _DEV_: boolean = false;
 export interface IRouteRule {
   path: string;
   name?: string;
-  router?: IRouteRule[];
+  next?: IRouteRule[];
 }
 
 export interface IRouteParseResult {
@@ -27,12 +27,12 @@ let parseRuleIterate = (
   ruleName: string,
   basePath: string[]
 ): IRouteParseResult => {
-  if (_.isEmpty(ruleSteps)) {
+  if (isEmpty(ruleSteps)) {
     return { name: ruleName, matches: true, restPath: segments, basePath: basePath, data: data };
   }
 
-  let s0 = _.first(segments);
-  let r0 = _.first(ruleSteps);
+  let s0 = first(segments);
+  let r0 = first(ruleSteps);
 
   if (r0[0] === ":") {
     let newData = produce(data, draft => {
@@ -53,7 +53,7 @@ let parseRuleIterate = (
 };
 
 let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): IRouteParseResult => {
-  let ruleName = rule.name || _.first(rule.path.split("/"));
+  let ruleName = rule.name || first(rule.path.split("/"));
 
   if (rule.path === "") {
     return {
@@ -97,8 +97,8 @@ let parseSegments = (
     }
   }
 
-  if (_.isEmpty(rules)) {
-    if (_.isEmpty(segments)) {
+  if (isEmpty(rules)) {
+    if (isEmpty(segments)) {
       return null;
     } else {
       let result = {
@@ -116,10 +116,10 @@ let parseSegments = (
       return result;
     }
   } else {
-    let rule0 = _.first(rules);
+    let rule0: IRouteRule = first(rules);
     let parseResult = parseWithRule(rule0, segments, basePath);
     let nextParams = produce(params, draft => {
-      _.assign(draft, parseResult.data);
+      assign(draft, parseResult.data);
     });
     let parseResultWithParams = produce(parseResult, draft => {
       draft.params = nextParams;
@@ -127,7 +127,7 @@ let parseSegments = (
 
     if (parseResult.matches) {
       let toReturn = produce(parseResultWithParams, (draft: IRouteParseResult) => {
-        draft.next = parseSegments(parseResult.restPath, rule0.router, parseResult.basePath, rule0.router, nextParams);
+        draft.next = parseSegments(parseResult.restPath, rule0.next, parseResult.basePath, rule0.next, nextParams);
       });
       // console.log("To return", toReturn);
       segmentsParsingCaches[cacheKey] = toReturn;

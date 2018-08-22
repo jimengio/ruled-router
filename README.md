@@ -10,7 +10,7 @@ This router is designed for apps in jimeng.io . Code ideas in this router url ad
 export interface IRouteRule {
   path: string;
   name?: string;
-  router?: IRouteRule[];
+  next?: IRouteRule[];
 }
 
 export let parseRoutePath = (pathString: string, rules: IRouteRule[]): IRouteParseResult => {}
@@ -35,13 +35,13 @@ A simple example of this parser looks like:
 let pageRules = [
   {
     path: "idleAnalysis",
-    router: [
+    next: [
       { name: "components", path: "components/:componentId", },
     ],
   },
   {
     path: "flowControlAnalysis",
-    router: [
+    next: [
       { name: "processes", path: "components/:componentId/processes/:processId", },
     ],
   }

@@ -1,6 +1,6 @@
 {
   "name": "@jimengio/ruled-router",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
   "main": "./lib/path-parser.js",
   "types": "./lib/path-parser.d.ts",
@@ -10,7 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier src/path-parser.ts --write",
-    "compile": "tsc -d src/path-parser.ts --outDir lib/"
+    "compile": "tsc -d src/path-parser.ts --outDir lib/",
+    "prepublish": "yarn compile"
   },
   "repository": {
     "type": "git",
@@ -26,11 +27,11 @@
   },
   "homepage": "https://github.com/beego/ruled-router#readme",
   "dependencies": {
-    "immer": "^1.3.1",
+    "immer": "^1.5.0",
     "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "prettier": "^1.13.7",
-    "typescript": "^2.9.2"
+    "prettier": "^1.14.2",
+    "typescript": "^3.0.1"
   }
 }

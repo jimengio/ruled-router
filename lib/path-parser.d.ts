@@ -1,7 +1,7 @@
 export interface IRouteRule {
     path: string;
     name?: string;
-    router?: IRouteRule[];
+    next?: IRouteRule[];
 }
 export interface IRouteParseResult {
     matches: boolean;

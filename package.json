@@ -1,6 +1,6 @@
 {
   "name": "@jimengio/ruled-router",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
   "main": "./lib/path-parser.js",
   "types": "./lib/path-parser.d.ts",
@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/beego/ruled-router#readme",
   "dependencies": {
-    "immer": "^1.5.0",
-    "lodash": "^4.17.10"
+    "immer": "^1.7.2",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
-    "prettier": "^1.14.2",
-    "typescript": "^3.0.1"
+    "prettier": "^1.14.3",
+    "typescript": "^3.1.3"
   }
 }

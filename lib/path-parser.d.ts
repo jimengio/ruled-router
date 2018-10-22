@@ -1,7 +1,10 @@
-export interface IRouteRule {
+export interface IRouteRule<T = {
+    [k: string]: any;
+}> {
     path: string;
     name?: string;
     next?: IRouteRule[];
+    extra?: T;
 }
 export interface IRouteParseResult {
     matches: boolean;
@@ -10,7 +13,10 @@ export interface IRouteParseResult {
     restPath: string[];
     basePath: string[];
     next?: IRouteParseResult;
-    rules?: IRouteRule[];
+    rule?: IRouteRule;
+    definedRules?: IRouteRule[];
     params?: any;
 }
-export declare let parseRoutePath: (pathString: string, rules: IRouteRule[]) => IRouteParseResult;
+export declare let parseRoutePath: (pathString: string, definedrules: IRouteRule<{
+    [k: string]: any;
+}>[]) => IRouteParseResult;

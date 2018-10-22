@@ -3,10 +3,11 @@ import produce from "immer";
 
 let _DEV_: boolean = false;
 
-export interface IRouteRule {
+export interface IRouteRule<T = { [k: string]: any }> {
   path: string;
   name?: string;
   next?: IRouteRule[];
+  extra?: T;
 }
 
 export interface IRouteParseResult {
@@ -16,7 +17,8 @@ export interface IRouteParseResult {
   restPath: string[];
   basePath: string[];
   next?: IRouteParseResult;
-  rules?: IRouteRule[];
+  rule?: IRouteRule;
+  definedRules?: IRouteRule[];
   params?: any;
 }
 
@@ -24,11 +26,13 @@ let parseRuleIterate = (
   data: any,
   segments: string[],
   ruleSteps: string[],
-  ruleName: string,
+  rule: IRouteRule,
   basePath: string[]
 ): IRouteParseResult => {
+  let ruleName = rule.name || first(rule.path.split("/"));
+
   if (isEmpty(ruleSteps)) {
-    return { name: ruleName, matches: true, restPath: segments, basePath: basePath, data: data };
+    return { name: ruleName, matches: true, restPath: segments, basePath: basePath, data: data, rule: rule };
   }
 
   let s0 = first(segments);
@@ -38,9 +42,9 @@ let parseRuleIterate = (
     let newData = produce(data, draft => {
       draft[r0.slice(1)] = s0;
     });
-    return parseRuleIterate(newData, segments.slice(1), ruleSteps.slice(1), ruleName, basePath.concat([s0]));
+    return parseRuleIterate(newData, segments.slice(1), ruleSteps.slice(1), rule, basePath.concat([s0]));
   } else if (s0 === r0) {
-    return parseRuleIterate(data, segments.slice(1), ruleSteps.slice(1), ruleName, basePath.concat([s0]));
+    return parseRuleIterate(data, segments.slice(1), ruleSteps.slice(1), rule, basePath.concat([s0]));
   } else {
     return {
       name: ruleName,
@@ -61,7 +65,8 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
       matches: true,
       restPath: segments,
       basePath: basePath,
-      data: null
+      data: null,
+      rule: rule
     };
   }
 
@@ -71,7 +76,7 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
     return { name: ruleName, matches: false, restPath: segments, basePath: basePath, data: null };
   }
 
-  return parseRuleIterate({}, segments, ruleSteps, ruleName, basePath);
+  return parseRuleIterate({}, segments, ruleSteps, rule, basePath);
 };
 
 var segmentsParsingCaches = {};
@@ -81,7 +86,7 @@ if (_DEV_) {
 
 let parseSegments = (
   segments: string[],
-  rules: IRouteRule[],
+  usingRules: IRouteRule[],
   basePath: string[],
   originalRules: IRouteRule[],
   params: any
@@ -97,18 +102,18 @@ let parseSegments = (
     }
   }
 
-  if (isEmpty(rules)) {
+  if (isEmpty(usingRules)) {
     if (isEmpty(segments)) {
       return null;
     } else {
-      let result = {
+      let result: IRouteParseResult = {
         matches: false,
         name: "404",
         data: null,
         params: params,
         restPath: segments,
         basePath: basePath,
-        rules: originalRules
+        definedRules: originalRules
       };
 
       console.warn("No rule found for the path", result);
@@ -116,7 +121,7 @@ let parseSegments = (
       return result;
     }
   } else {
-    let rule0: IRouteRule = first(rules);
+    let rule0: IRouteRule = first(usingRules);
     let parseResult = parseWithRule(rule0, segments, basePath);
     let nextParams = produce(params, draft => {
       assign(draft, parseResult.data);
@@ -133,13 +138,13 @@ let parseSegments = (
       segmentsParsingCaches[cacheKey] = toReturn;
       return toReturn;
     } else {
-      return parseSegments(segments, rules.slice(1), basePath, originalRules, nextParams);
+      return parseSegments(segments, usingRules.slice(1), basePath, originalRules, nextParams);
     }
   }
 };
 
-export let parseRoutePath = (pathString: string, rules: IRouteRule[]): IRouteParseResult => {
+export let parseRoutePath = (pathString: string, definedrules: IRouteRule[]): IRouteParseResult => {
   let segments = pathString.split("/").filter(x => x !== "");
 
-  return parseSegments(segments, rules, [], rules, {});
+  return parseSegments(segments, definedrules, [], definedrules, {});
 };

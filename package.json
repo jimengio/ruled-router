@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/beego/ruled-router#readme",
   "dependencies": {
-    "immer": "^1.7.2",
+    "immer": "^1.7.3",
     "lodash": "^4.17.11"
   },
   "devDependencies": {

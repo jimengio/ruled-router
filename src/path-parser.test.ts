@@ -18,6 +18,10 @@ let rules: IRouteRule[] = [
   {
     path: "a",
     next: [{ path: "b" }, { path: "c/:x", next: [{ path: "d/:y" }] }, { path: ":z" }]
+  },
+  {
+    path: "e/:x",
+    next: [{ path: "f/:y" }]
   }
 ];
 
@@ -45,6 +49,16 @@ test("test parsing path with multiple variables", () => {
     name: "a",
     next: { name: "c", next: { name: "d", next: null, params: { x: "10", y: "22" } }, params: { x: "10" } },
     params: {}
+  };
+  expect(actual).toEqual(goal);
+});
+
+test("test parsing nested params", () => {
+  let actual = simplifyResult(parseRoutePath("/e/44/f/55", rules));
+  let goal: ISimplifiedResult = {
+    name: "e",
+    next: { name: "f", next: null, params: { x: "44", y: "55" } },
+    params: { x: "44" }
   };
   expect(actual).toEqual(goal);
 });

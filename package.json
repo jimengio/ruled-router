@@ -10,7 +10,7 @@
   "scripts": {
     "test": "yarn jest",
     "format": "prettier src/path-parser.ts --write",
-    "compile": "tsc -d src/path-parser.ts --outDir lib/",
+    "compile": "rm -rf lib && tsc --project tsconfig.json",
     "prepublish": "yarn compile"
   },
   "repository": {
@@ -27,14 +27,14 @@
   },
   "homepage": "https://github.com/beego/ruled-router#readme",
   "dependencies": {
-    "immer": "^1.7.3",
+    "immer": "^1.12.1",
     "lodash": "^4.17.11"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.9",
-    "jest": "^23.6.0",
-    "prettier": "^1.14.3",
-    "ts-jest": "^23.10.4",
+    "@types/jest": "^23.3.13",
+    "jest": "^24.0.0",
+    "prettier": "^1.16.3",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.1.3"
   }
 }

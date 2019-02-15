@@ -12,7 +12,11 @@
     "jsx": "react",
     "lib": ["es2016", "dom"],
     "baseUrl": "./src/",
+    "declaration": true,
+    "declarationDir": "./lib",
     "paths": {},
+    "outDir": "./lib",
     "plugins": []
-  }
+  },
+  "exclude": ["**/*.test.ts"]
 }

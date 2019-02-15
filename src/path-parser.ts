@@ -13,6 +13,7 @@ export interface IRouteRule<T = { [k: string]: any }> {
 export interface IRouteParseResult {
   matches: boolean;
   name: string;
+  raw: string;
   data: any;
   restPath: string[];
   basePath: string[];
@@ -32,7 +33,15 @@ let parseRuleIterate = (
   let ruleName = rule.name || first(rule.path.split("/"));
 
   if (isEmpty(ruleSteps)) {
-    return { name: ruleName, matches: true, restPath: segments, basePath: basePath, data: data, rule: rule };
+    return {
+      name: ruleName,
+      raw: rule.path,
+      matches: true,
+      restPath: segments,
+      basePath: basePath,
+      data: data,
+      rule: rule
+    };
   }
 
   let s0 = first(segments);
@@ -48,6 +57,7 @@ let parseRuleIterate = (
   } else {
     return {
       name: ruleName,
+      raw: rule.path,
       matches: false,
       restPath: segments,
       basePath: basePath,
@@ -62,6 +72,7 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
   if (rule.path === "") {
     return {
       name: ruleName,
+      raw: rule.path,
       matches: true,
       restPath: segments,
       basePath: basePath,
@@ -73,7 +84,7 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
   let ruleSteps = rule.path.split("/");
 
   if (segments.length < ruleSteps.length) {
-    return { name: ruleName, matches: false, restPath: segments, basePath: basePath, data: null };
+    return { name: ruleName, raw: rule.path, matches: false, restPath: segments, basePath: basePath, data: null };
   }
 
   return parseRuleIterate({}, segments, ruleSteps, rule, basePath);
@@ -109,6 +120,7 @@ let parseSegments = (
       let result: IRouteParseResult = {
         matches: false,
         name: "404",
+        raw: null,
         data: null,
         params: params,
         restPath: segments,

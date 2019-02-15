@@ -9,6 +9,7 @@ export interface IRouteRule<T = {
 export interface IRouteParseResult {
     matches: boolean;
     name: string;
+    raw: string;
     data: any;
     restPath: string[];
     basePath: string[];

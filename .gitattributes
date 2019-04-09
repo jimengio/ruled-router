@@ -1,3 +1,2 @@
 
-yarn.lock -diff
-lib/*.js -diff linguist-generated
+yarn.lock -diff linguist-generated

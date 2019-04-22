@@ -7,6 +7,7 @@ export interface IRouteRule<T = { [k: string]: any }> {
   path: string;
   name?: string;
   next?: IRouteRule[];
+  queries?: string[];
   extra?: T;
 }
 

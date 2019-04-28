@@ -33,10 +33,14 @@
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "@types/lodash": "^4.14.123",
+    "@types/query-string": "^6.3.0",
     "immer": "^3.1.1",
     "jest": "^24.7.1",
     "prettier": "^1.17.0",
     "ts-jest": "^24.0.2",
     "typescript": "^3.4.4"
+  },
+  "dependencies": {
+    "query-string": "^6.4.2"
   }
 }

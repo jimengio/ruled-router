@@ -1,5 +1,6 @@
 import { first, isEmpty, assign } from "lodash";
 import produce from "immer";
+import * as queryString from "query-string";
 
 let _DEV_: boolean = false;
 
@@ -18,10 +19,12 @@ export interface IRouteParseResult {
   data: any;
   restPath: string[];
   basePath: string[];
+  identityPath: string;
   next?: IRouteParseResult;
   rule?: IRouteRule;
   definedRules?: IRouteRule[];
   params?: any;
+  query: { [k: string]: string };
 }
 
 let parseRuleIterate = (
@@ -40,8 +43,10 @@ let parseRuleIterate = (
       matches: true,
       restPath: segments,
       basePath: basePath,
+      identityPath: null,
       data: data,
-      rule: rule
+      rule: rule,
+      query: null
     };
   }
 
@@ -62,7 +67,9 @@ let parseRuleIterate = (
       matches: false,
       restPath: segments,
       basePath: basePath,
-      data: null
+      identityPath: null,
+      data: null,
+      query: null
     };
   }
 };
@@ -74,18 +81,29 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
     return {
       name: ruleName,
       raw: rule.path,
+      identityPath: null,
       matches: true,
       restPath: segments,
       basePath: basePath,
       data: null,
-      rule: rule
+      rule: rule,
+      query: null
     };
   }
 
   let ruleSteps = rule.path.split("/");
 
   if (segments.length < ruleSteps.length) {
-    return { name: ruleName, raw: rule.path, matches: false, restPath: segments, basePath: basePath, data: null };
+    return {
+      name: ruleName,
+      raw: rule.path,
+      matches: false,
+      restPath: segments,
+      basePath: basePath,
+      identityPath: null,
+      data: null,
+      query: null
+    };
   }
 
   return parseRuleIterate({}, segments, ruleSteps, rule, basePath);
@@ -101,9 +119,11 @@ let parseSegments = (
   usingRules: IRouteRule[],
   basePath: string[],
   originalRules: IRouteRule[],
-  params: any
+  params: any,
+  query: { [k: string]: string }
 ): IRouteParseResult => {
-  let cacheKey = `${segments.join("/")}+${basePath.join("/")}`;
+  let cacheKey = `${segments.join("/")}+${basePath.join("/")}+?${queryString.stringify(query)}`;
+  let identityPath = `/${segments.join("/")}?${queryString.stringify(query)}`;
 
   if (_DEV_) {
     // console.warn('Ignoring parsing caches during DEV')
@@ -126,7 +146,9 @@ let parseSegments = (
         params: params,
         restPath: segments,
         basePath: basePath,
-        definedRules: originalRules
+        identityPath,
+        definedRules: originalRules,
+        query
       };
 
       console.warn("No rule found for the path", result);
@@ -145,19 +167,31 @@ let parseSegments = (
 
     if (parseResult.matches) {
       let toReturn = produce(parseResultWithParams, (draft: IRouteParseResult) => {
-        draft.next = parseSegments(parseResult.restPath, rule0.next, parseResult.basePath, rule0.next, nextParams);
+        draft.next = parseSegments(
+          parseResult.restPath,
+          rule0.next,
+          parseResult.basePath,
+          rule0.next,
+          nextParams,
+          query
+        );
+        draft.query = query;
+        draft.identityPath = identityPath;
       });
       // console.log("To return", toReturn);
       segmentsParsingCaches[cacheKey] = toReturn;
       return toReturn;
     } else {
-      return parseSegments(segments, usingRules.slice(1), basePath, originalRules, nextParams);
+      return parseSegments(segments, usingRules.slice(1), basePath, originalRules, nextParams, query);
     }
   }
 };
 
 export let parseRoutePath = (pathString: string, definedrules: IRouteRule[]): IRouteParseResult => {
-  let segments = pathString.split("/").filter(x => x !== "");
+  let [pathPart, queryPart] = pathString.split("?");
+  let segments = pathPart.split("/").filter(x => x !== "");
 
-  return parseSegments(segments, definedrules, [], definedrules, {});
+  return parseSegments(segments, definedrules, [], definedrules, {}, queryString.parse(queryPart) as {
+    [k: string]: string;
+  });
 };

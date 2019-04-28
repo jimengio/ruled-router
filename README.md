@@ -1,6 +1,4 @@
-
-Ruled Router
-----
+## Ruled Router
 
 This router is designed for apps in jimeng.io . Code ideas in this router url address should be parsed before page rendering. To make it happen, we feed rules to the parser so it knows how the url path is structured.
 
@@ -13,7 +11,7 @@ export interface IRouteRule {
   next?: IRouteRule[];
 }
 
-export let parseRoutePath = (pathString: string, rules: IRouteRule[]): IRouteParseResult => {}
+export let parseRoutePath = (pathString: string, rules: IRouteRule[]): IRouteParseResult => {};
 
 export interface IRouteParseResult {
   matches: boolean;
@@ -24,6 +22,7 @@ export interface IRouteParseResult {
   next?: IRouteParseResult;
   rules?: IRouteRule[];
   params?: any;
+  query: { [k: string]: string };
 }
 ```
 
@@ -35,17 +34,13 @@ A simple example of this parser looks like:
 let pageRules = [
   {
     path: "idleAnalysis",
-    next: [
-      { name: "components", path: "components/:componentId", },
-    ],
+    next: [{ name: "components", path: "components/:componentId" }]
   },
   {
     path: "flowControlAnalysis",
-    next: [
-      { name: "processes", path: "components/:componentId/processes/:processId", },
-    ],
+    next: [{ name: "processes", path: "components/:componentId/processes/:processId" }]
   }
-]
+];
 ```
 
 And it can be parsed like:
@@ -67,31 +62,77 @@ into a JSON tree:
   "name": "plants",
   "matches": true,
   "restPath": null,
-  "basePath": ["plants","152883204915","qualityManagement","measurementData","components","21712526851768321","processes","39125230470234114"
+  "basePath": [
+    "plants",
+    "152883204915",
+    "qualityManagement",
+    "measurementData",
+    "components",
+    "21712526851768321",
+    "processes",
+    "39125230470234114"
   ],
   "data": {
     "plantId": "152883204915"
   },
+  "query": {},
+  "identityPath": "/plants/152883204915/qualityManagement/measurementData/components/21712526851768321/processes/39125230470234114?",
   "next": {
     "name": "qualityManagement",
     "matches": true,
     "restPath": null,
-    "basePath": ["qualityManagement","measurementData","components","21712526851768321","processes","39125230470234114"
+    "basePath": [
+      "qualityManagement",
+      "measurementData",
+      "components",
+      "21712526851768321",
+      "processes",
+      "39125230470234114"
     ],
     "data": {},
+    "query": {},
+    "identityPath": "/qualityManagement/measurementData/components/21712526851768321/processes/39125230470234114?",
     "next": {
       "name": "measurementData",
       "matches": true,
       "restPath": null,
-      "basePath": ["measurementData","components","21712526851768321","processes","39125230470234114"
-      ],
+      "basePath": ["measurementData", "components", "21712526851768321", "processes", "39125230470234114"],
       "data": {
         "componentId": "21712526851768321",
         "processId": "39125230470234114"
       },
+      "query": {},
+      "identityPath": "/measurementData/components/21712526851768321/processes/39125230470234114?",
       "next": null
     }
   }
+}
+```
+
+```ts
+export interface IRouteParseResult {
+  matches: boolean;
+  /** an aliased name defined in rules. you can also skip name and use path */
+  name: string;
+  /** parsed result from sub router */
+  next?: IRouteParseResult;
+
+  /** parameters parsed in current piece of router */
+  params?: any;
+  /** all parameters parsed, including data from parents level */
+  data: any;
+  query: { [k: string]: string };
+
+  /** returns the path defined in rule, it's more accurate than rule.name field  */
+  raw: string;
+  /** a formatted string representation of the path, can be used in React.memo or shouldComponentUpdate */
+  identityPath: string;
+
+  /** mostly debug information */
+  restPath: string[];
+  basePath: string[];
+  rule?: IRouteRule;
+  definedRules?: IRouteRule[];
 }
 ```
 

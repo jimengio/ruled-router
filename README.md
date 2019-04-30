@@ -136,6 +136,13 @@ export interface IRouteParseResult {
 }
 ```
 
+Also several helper components:
+
+```tsx
+<HashLink to="/" />
+<HashRedirect to="/" />
+```
+
 ### License
 
 MIT

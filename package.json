@@ -1,6 +1,6 @@
 {
   "name": "@jimengio/ruled-router",
-  "version": "0.2.9",
+  "version": "0.2.10-a1",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
   "main": "./lib/path-parser.js",
   "types": "./lib/path-parser.d.ts",
@@ -10,7 +10,7 @@
   "scripts": {
     "test": "yarn jest",
     "format": "prettier src/path-parser.ts --write",
-    "compile": "rm -rf lib && tsc --project tsconfig.json",
+    "compile": "rm -rfv lib/* && tsc -d --project tsconfig-compile.json --outDir lib/",
     "prepare": "yarn compile"
   },
   "repository": {
@@ -28,19 +28,23 @@
   "homepage": "https://github.com/beego/ruled-router#readme",
   "peerDependencies": {
     "immer": "*",
-    "lodash": "*"
+    "lodash": "*",
+    "react": "*",
+    "@types/react": "*"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.11",
+    "@types/jest": "^24.0.12",
     "@types/lodash": "^4.14.123",
     "@types/query-string": "^6.3.0",
+    "@types/react": "^16.8.15",
     "immer": "^3.1.1",
     "jest": "^24.7.1",
     "prettier": "^1.17.0",
+    "react": "^16.8.6",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.4.4"
+    "typescript": "^3.4.5"
   },
   "dependencies": {
-    "query-string": "^6.4.2"
+    "query-string": "^6.5.0"
   }
 }

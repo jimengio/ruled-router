@@ -19,21 +19,21 @@ export let HashLink: SFC<{
 
 export let HashRedirect: SFC<{
   to: string;
-  timeout?: number;
+  delay?: number;
   className?: string;
   placeholder?: string;
 }> = props => {
-  let timeout = useRef(null);
-  let duration = (props.timeout || 0.8) * 1000;
+  let timing = useRef(null);
+  let delay = (props.delay || 0.8) * 1000;
 
   useEffect(() => {
-    timeout.current = setTimeout(() => {
+    timing.current = setTimeout(() => {
       window.location.hash = props.to;
-    }, duration);
+    }, delay);
 
     return () => {
-      if (timeout.current) {
-        clearInterval(timeout.current);
+      if (timing.current) {
+        clearInterval(timing.current);
       }
     };
   }, []);

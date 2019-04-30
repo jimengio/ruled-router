@@ -139,8 +139,10 @@ export interface IRouteParseResult {
 Also several helper components:
 
 ```tsx
-<HashLink to="/" />
-<HashRedirect to="/" />
+<HashLink to="/" text="DEMO" />
+
+// delay in seconds
+<HashRedirect to="/" delay={1.2} />
 ```
 
 ### License

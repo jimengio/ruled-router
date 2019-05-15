@@ -1,5 +1,7 @@
 ## Ruled Router
 
+![](https://img.shields.io/npm/v/@jimengio/ruled-router.svg?style=flat-square)
+
 This router is designed for apps in jimeng.io . Code ideas in this router url address should be parsed before page rendering. To make it happen, we feed rules to the parser so it knows how the url path is structured.
 
 ### Types

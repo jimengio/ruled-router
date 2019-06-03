@@ -7,6 +7,7 @@ let _DEV_: boolean = false;
 export interface IRouteRule<T = { [k: string]: any }> {
   path: string;
   name?: string;
+  title?: string;
   next?: IRouteRule[];
   queries?: string[];
   extra?: T;

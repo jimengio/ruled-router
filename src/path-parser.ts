@@ -13,19 +13,23 @@ export interface IRouteRule<T = { [k: string]: any }> {
   extra?: T;
 }
 
-export interface IRouteParseResult {
+interface ISimpleObject {
+  [k: string]: string;
+}
+
+export interface IRouteParseResult<IParams = ISimpleObject, IQuery = ISimpleObject> {
   matches: boolean;
   name: string;
   raw: string;
-  data: any;
   restPath: string[];
   basePath: string[];
   identityPath: string;
   next?: IRouteParseResult;
   rule?: IRouteRule;
   definedRules?: IRouteRule[];
-  params?: any;
-  query: { [k: string]: string };
+  data: ISimpleObject;
+  params: IParams;
+  query: IQuery;
 }
 
 let parseRuleIterate = (
@@ -46,6 +50,7 @@ let parseRuleIterate = (
       basePath: basePath,
       identityPath: null,
       data: data,
+      params: {},
       rule: rule,
       query: null
     };
@@ -70,6 +75,7 @@ let parseRuleIterate = (
       basePath: basePath,
       identityPath: null,
       data: null,
+      params: {},
       query: null
     };
   }
@@ -87,6 +93,7 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
       restPath: segments,
       basePath: basePath,
       data: null,
+      params: {},
       rule: rule,
       query: null
     };
@@ -103,6 +110,7 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
       basePath: basePath,
       identityPath: null,
       data: null,
+      params: {},
       query: null
     };
   }
@@ -163,7 +171,7 @@ let parseSegments = (
       assign(draft, parseResult.data);
     });
     let parseResultWithParams = produce(parseResult, draft => {
-      draft.params = nextParams;
+      draft.params = nextParams as any;
     });
 
     if (parseResult.matches) {

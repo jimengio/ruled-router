@@ -28,6 +28,12 @@ export interface IRouteParseResult {
 }
 ```
 
+Not quite useful but you can specify types for `params` and `query`,
+
+```ts
+IRouteParseResult<IParams, IQuery>
+```
+
 ### Usage
 
 A simple example of this parser looks like:

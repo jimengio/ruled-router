@@ -36,7 +36,7 @@ export let HashRedirect: SFC<{
         clearInterval(timing.current);
       }
     };
-  }, []);
+  }, [props.to]);
 
   return <span className={props.className}>{props.placeholder}</span>;
 };

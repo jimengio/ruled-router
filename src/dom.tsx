@@ -38,5 +38,5 @@ export let HashRedirect: SFC<{
     };
   }, [props.to]);
 
-  return <span className={props.className}>{props.placeholder}</span>;
+  return <span className={props.className}>{props.children || props.placeholder}</span>;
 };

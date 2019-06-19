@@ -21,7 +21,6 @@ export let HashRedirect: SFC<{
   to: string;
   delay?: number;
   className?: string;
-  placeholder?: string;
 }> = props => {
   let timing = useRef(null);
   let delay = (props.delay || 0.8) * 1000;
@@ -38,5 +37,5 @@ export let HashRedirect: SFC<{
     };
   }, [props.to]);
 
-  return <span className={props.className}>{props.children || props.placeholder}</span>;
+  return <div className={props.className}>{props.children}</div>;
 };

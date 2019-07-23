@@ -7,7 +7,8 @@ export let HashLink: SFC<{
 }> = props => {
   return (
     <a
-      onClick={() => {
+      onClick={event => {
+        event.preventDefault();
         window.location.hash = props.to;
       }}
       className={props.className}
@@ -22,10 +23,13 @@ export let HashRedirect: SFC<{
   delay?: number;
   className?: string;
 }> = props => {
-  let timing = useRef(null);
+  let timing = useRef(null as number);
   let delay = (props.delay || 0.8) * 1000;
 
   useEffect(() => {
+    // in case there is an old timer
+    clearInterval(timing.current);
+
     timing.current = setTimeout(() => {
       window.location.hash = props.to;
     }, delay);

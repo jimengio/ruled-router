@@ -153,6 +153,12 @@ Also several helper components:
 <HashRedirect to="/" delay={1.2} />
 ```
 
+Find a target route operator:
+
+```tsx
+findRouteTarget(genRouter.a.b, "c");
+```
+
 ### License
 
 MIT

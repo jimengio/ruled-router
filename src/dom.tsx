@@ -1,6 +1,6 @@
-import React, { SFC, useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef } from "react";
 
-export let HashLink: SFC<{
+export let HashLink: FC<{
   to: string;
   text?: string;
   className?: string;
@@ -18,7 +18,7 @@ export let HashLink: SFC<{
   );
 };
 
-export let HashRedirect: SFC<{
+export let HashRedirect: FC<{
   to: string;
   delay?: number;
   className?: string;
@@ -42,4 +42,28 @@ export let HashRedirect: SFC<{
   }, [props.to]);
 
   return <div className={props.className}>{props.children}</div>;
+};
+
+interface FakeRouteOperator {
+  name: string;
+  raw: string;
+  path: (...xs: string[]) => string;
+  go: (...xs: string[]) => void;
+}
+
+/** find a route target dynamically,
+ * @param branch refers to parent branch of candidate route items.
+ * since it's dynamic, types does not ensure correctness.
+ */
+export let findRouteTarget = (branch: { [name: string]: any }, path: string): FakeRouteOperator => {
+  for (let k in branch) {
+    let item: FakeRouteOperator = branch[k];
+    if (item != null && item.name != null && item.go != null) {
+      if (item.name === path) {
+        return item;
+      }
+    }
+  }
+  console.warn("Found no matching route item:", path, "in", branch);
+  return null;
 };

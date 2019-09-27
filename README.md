@@ -2,149 +2,140 @@
 
 ![](https://img.shields.io/npm/v/@jimengio/ruled-router.svg?style=flat-square)
 
-This router is designed for apps in jimeng.io . Code ideas in this router url address should be parsed before page rendering. To make it happen, we feed rules to the parser so it knows how the url path is structured.
+> Router parser designed for migrating some apps in @jimengio.
 
-### Types
+### Rationale
 
-```ts
-export interface IRouteRule {
-  path: string;
-  name?: string;
-  next?: IRouteRule[];
-}
+![ruled-router explained](./diagram/ruled-router.png)
 
-export let parseRoutePath = (pathString: string, rules: IRouteRule[]): IRouteParseResult => {};
+Router is part of a GUI application so definitely it is explained by MVC. Popular router libraries for React chases better syntax and seamless integration to JSX, thus shadows its nature of MVC. In data-driven applications today, it would be clearer to have model part extracted out and playing the role as Model.
 
-export interface IRouteParseResult {
-  matches: boolean;
-  name: string;
-  data: any;
-  restPath: string[];
-  basePath: string[];
-  next?: IRouteParseResult;
-  rules?: IRouteRule[];
-  params?: any;
-  query: { [k: string]: string };
-}
-```
+Steps in using router:
 
-Not quite useful but you can specify types for `params` and `query`,
+- address changes and we have the new address string,
+- parse address from url string to JSON data, based on pre-defined rules,
+- render Virtual DOM with store and JSON data from router.
 
-```ts
-IRouteParseResult<IParams, IQuery>
-```
+React as well as other data-driven architectures prefer "Single Source of Truth". Normally store is supposed to be all the truth. But since browsers does not handle controls of address bar over to developers totally, it still holds a small part of truth inside.
 
 ### Usage
 
-A simple example of this parser looks like:
+Say the path is:
+
+```url
+/home/plant/123/shop/456/789
+```
+
+parsed it with some rules:
 
 ```ts
 let pageRules = [
   {
-    path: "idleAnalysis",
-    next: [{ name: "components", path: "components/:componentId" }]
-  },
-  {
-    path: "flowControlAnalysis",
-    next: [{ name: "processes", path: "components/:componentId/processes/:processId" }]
+    path: "home",
+    next: [
+      {
+        path: "plant/:plantId",
+        next: [
+          {
+            path: "shop/:shopId/:corner"
+          }
+        ]
+      }
+    ]
   }
 ];
-```
 
-And it can be parsed like:
-
-```ts
 let router: IRouteParseResult = parseRoutePath(this.props.location.pathname, pageRules);
 ```
 
-With a lot more complicated list of rules, we are able to parse url of:
+After parsing you will get:
 
-```url
-/plants/152883204915/qualityManagement/measurementData/components/21712526851768321/processes/39125230470234114
-```
-
-into a JSON tree:
+<details>
+<summary>A piece of JSON data...</summary>
 
 ```json
 {
-  "name": "plants",
+  "raw": "home",
+  "name": "home",
   "matches": true,
-  "restPath": null,
-  "basePath": [
-    "plants",
-    "152883204915",
-    "qualityManagement",
-    "measurementData",
-    "components",
-    "21712526851768321",
-    "processes",
-    "39125230470234114"
-  ],
-  "data": {
-    "plantId": "152883204915"
-  },
-  "query": {},
-  "identityPath": "/plants/152883204915/qualityManagement/measurementData/components/21712526851768321/processes/39125230470234114?",
+  "restPath": ["plant", "123", "shop", "456", "789"],
+  "params": {},
+  "data": {},
   "next": {
-    "name": "qualityManagement",
+    "raw": "plant/:plantId",
+    "name": "plant",
     "matches": true,
-    "restPath": null,
-    "basePath": [
-      "qualityManagement",
-      "measurementData",
-      "components",
-      "21712526851768321",
-      "processes",
-      "39125230470234114"
-    ],
-    "data": {},
-    "query": {},
-    "identityPath": "/qualityManagement/measurementData/components/21712526851768321/processes/39125230470234114?",
+    "restPath": ["shop", "456", "789"],
+    "params": {
+      "plantId": "123"
+    },
+    "data": {
+      "plantId": "123"
+    },
     "next": {
-      "name": "measurementData",
+      "raw": "shop/:shopId/:corner",
+      "name": "shop",
       "matches": true,
-      "restPath": null,
-      "basePath": ["measurementData", "components", "21712526851768321", "processes", "39125230470234114"],
+      "next": null,
+      "restPath": [],
       "data": {
-        "componentId": "21712526851768321",
-        "processId": "39125230470234114"
+        "shopId": "456",
+        "corner": "789"
       },
-      "query": {},
-      "identityPath": "/measurementData/components/21712526851768321/processes/39125230470234114?",
-      "next": null
+      "params": {
+        "plantId": "123",
+        "shopId": "456",
+        "corner": "789"
+      }
     }
   }
 }
 ```
 
-```ts
-export interface IRouteParseResult {
-  matches: boolean;
-  /** an aliased name defined in rules. you can also skip name and use path */
-  name: string;
-  /** parsed result from sub router */
-  next?: IRouteParseResult;
+Or in a more intuitive syntax:
 
-  /** parameters parsed in current piece of router */
-  params?: any;
-  /** all parameters parsed, including data from parents level */
-  data: any;
-  query: { [k: string]: string };
-
-  /** returns the path defined in rule, it's more accurate than rule.name field  */
-  raw: string;
-  /** a formatted string representation of the path, can be used in React.memo or shouldComponentUpdate */
-  identityPath: string;
-
-  /** mostly debug information */
-  restPath: string[];
-  basePath: string[];
-  rule?: IRouteRule;
-  definedRules?: IRouteRule[];
-}
+```edn
+{:raw "home",
+ :name "home",
+ :matches true,
+ :restPath ["plant" "123" "shop" "456" "789"],
+ :params {},
+ :data {},
+ :next {:raw "plant/:plantId",
+        :name "plant",
+        :matches true,
+        :restPath ["shop" "456" "789"],
+        :params {:plantId "123"},
+        :data {:plantId "123"},
+        :next {:raw "shop/:shopId/:corner",
+               :name "shop",
+               :matches true,
+               :next nil,
+               :restPath [],
+               :data {:shopId "456", :corner "789"},
+               :params {:plantId "123", :shopId "456", :corner "789"}}}}
 ```
 
-Also several helper components:
+</details>
+
+The you may use the data as `props.router` paired with `switch/case`:
+
+```tsx
+let Container: FC<{ router: IRouteParseResult }> = props => {
+  switch (props.router.name) {
+    case "home":
+      return <Home router={props.router.next} />;
+    default:
+      return "Other pages";
+  }
+};
+```
+
+### Controller
+
+> ruled-router does not utilities for changing the address, you may need to change url and watch url changes by your own.
+
+Components for triggering path change:
 
 ```tsx
 <HashLink to="/" text="DEMO" />
@@ -153,11 +144,19 @@ Also several helper components:
 <HashRedirect to="/" delay={1.2} />
 ```
 
-Find a target route operator:
+Normally the path can be long and writing by hand is erroneous. Our solution is generating methods from the rules defined above with the library [router-code-generator](https://github.com/jimengio/router-code-generator/).
+
+### Helpers
+
+Find a target route operator from generated router methods:
 
 ```tsx
 findRouteTarget(genRouter.a.b, "c");
 ```
+
+### TODO
+
+- query parsing is supported in our own codebase, need to extract out.
 
 ### License
 

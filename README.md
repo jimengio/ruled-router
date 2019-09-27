@@ -2,21 +2,21 @@
 
 ![](https://img.shields.io/npm/v/@jimengio/ruled-router.svg?style=flat-square)
 
-This router is designed for apps in jimeng.io . Code ideas in this router url address should be parsed before page rendering. To make it happen, we feed rules to the parser so it knows how the url path is structured.
+> Router parser designed for migrating some apps in @jimengio.
 
 ### Rationale
 
 ![ruled-router explained](./diagram/ruled-router.png)
 
-Router is part of a GUI application so definitely it is explained by MVC. Popular router library for React chases better syntax and seamless integration of JSX, thus shadows its nature of MVC. In data-driven applications today, it would be clearer to have model part extracted out and placed as the role of store. And the data parsed from string-based address will be further used by view part for UI rendering.
+Router is part of a GUI application so definitely it is explained by MVC. Popular router libraries for React chases better syntax and seamless integration to JSX, thus shadows its nature of MVC. In data-driven applications today, it would be clearer to have model part extracted out and playing the role as Model.
 
-So steps is slightly different of using the router:
+Steps in using router:
 
-- address changes and we have the new address,
-- parse address from rul string to JSON data, based of pre-defined rules,
-- view rendering with store and JSON data from router.
+- address changes and we have the new address string,
+- parse address from url string to JSON data, based on pre-defined rules,
+- render Virtual DOM with store and JSON data from router.
 
-React as well as other data-driven architecture prefers "Single source of truth". Normally store is supposed to be all the truth. But since browsers does not handle controls of address bar to developers totally, it still holds a small part of truth inside.
+React as well as other data-driven architectures prefer "Single Source of Truth". Normally store is supposed to be all the truth. But since browsers does not handle controls of address bar over to developers totally, it still holds a small part of truth inside.
 
 ### Usage
 
@@ -26,13 +26,7 @@ Say the path is:
 /home/plant/123/shop/456/789
 ```
 
-parsed it like:
-
-```ts
-let router: IRouteParseResult = parseRoutePath(this.props.location.pathname, pageRules);
-```
-
-A simple example of this parser looks like:
+parsed it with some rules:
 
 ```ts
 let pageRules = [
@@ -50,6 +44,8 @@ let pageRules = [
     ]
   }
 ];
+
+let router: IRouteParseResult = parseRoutePath(this.props.location.pathname, pageRules);
 ```
 
 After parsing you will get:

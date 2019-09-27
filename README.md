@@ -4,7 +4,140 @@
 
 This router is designed for apps in jimeng.io . Code ideas in this router url address should be parsed before page rendering. To make it happen, we feed rules to the parser so it knows how the url path is structured.
 
+### Rationale
+
+![ruled-router explained](./diagram/ruled-router.png)
+
+Router is part of a GUI application so definitely it is explained by MVC. Popular router library for React chases better syntax and seamless integration of JSX, thus shadows its nature of MVC. In data-driven applications today, it would be clearer to have model part extracted out and placed as the role of store. And the data parsed from string-based address will be further used by view part for UI rendering.
+
+So steps is slightly different of using the router:
+
+- address changes and we have the new address,
+- parse address from rul string to JSON data, based of pre-defined rules,
+- view rendering with store and JSON data from router.
+
+React as well as other data-driven architecture prefers "Single source of truth". Normally store is supposed to be all the truth. But since browsers does not handle controls of address bar to developers totally, it still holds a small part of truth inside.
+
+### Usage
+
+Say the path is:
+
+```url
+/home/plant/123/shop/456/789
+```
+
+parsed it like:
+
+```ts
+let router: IRouteParseResult = parseRoutePath(this.props.location.pathname, pageRules);
+```
+
+A simple example of this parser looks like:
+
+```ts
+let pageRules = [
+  {
+    path: "home",
+    next: [
+      {
+        path: "plant/:plantId",
+        next: [
+          {
+            path: "shop/:shopId/:corner"
+          }
+        ]
+      }
+    ]
+  }
+];
+```
+
+After parsing you will get:
+
+<details>
+<summary>A piece of JSON data...</summary>
+
+```json
+{
+  "raw": "home",
+  "name": "home",
+  "matches": true,
+  "restPath": ["plant", "123", "shop", "456", "789"],
+  "params": {},
+  "data": {},
+  "next": {
+    "raw": "plant/:plantId",
+    "name": "plant",
+    "matches": true,
+    "restPath": ["shop", "456", "789"],
+    "params": {
+      "plantId": "123"
+    },
+    "data": {
+      "plantId": "123"
+    },
+    "next": {
+      "raw": "shop/:shopId/:corner",
+      "name": "shop",
+      "matches": true,
+      "next": null,
+      "restPath": [],
+      "data": {
+        "shopId": "456",
+        "corner": "789"
+      },
+      "params": {
+        "plantId": "123",
+        "shopId": "456",
+        "corner": "789"
+      }
+    }
+  }
+}
+```
+
+Or in a more intuitive syntax:
+
+```edn
+{:raw "home",
+ :name "home",
+ :matches true,
+ :restPath ["plant" "123" "shop" "456" "789"],
+ :params {},
+ :data {},
+ :next {:raw "plant/:plantId",
+        :name "plant",
+        :matches true,
+        :restPath ["shop" "456" "789"],
+        :params {:plantId "123"},
+        :data {:plantId "123"},
+        :next {:raw "shop/:shopId/:corner",
+               :name "shop",
+               :matches true,
+               :next nil,
+               :restPath [],
+               :data {:shopId "456", :corner "789"},
+               :params {:plantId "123", :shopId "456", :corner "789"}}}}
+```
+
+</details>
+
+The you may use the data as `props.router` paired with `switch/case`:
+
+```tsx
+let Container: FC<{ router: IRouteParseResult }> = props => {
+  switch (props.router.name) {
+    case "home":
+      return <Home router={props.router.next} />;
+    default:
+      return "Other pages";
+  }
+};
+```
+
 ### Types
+
+Type for rules:
 
 ```ts
 export interface IRouteRule {
@@ -34,88 +167,7 @@ Not quite useful but you can specify types for `params` and `query`,
 IRouteParseResult<IParams, IQuery>
 ```
 
-### Usage
-
-A simple example of this parser looks like:
-
-```ts
-let pageRules = [
-  {
-    path: "idleAnalysis",
-    next: [{ name: "components", path: "components/:componentId" }]
-  },
-  {
-    path: "flowControlAnalysis",
-    next: [{ name: "processes", path: "components/:componentId/processes/:processId" }]
-  }
-];
-```
-
-And it can be parsed like:
-
-```ts
-let router: IRouteParseResult = parseRoutePath(this.props.location.pathname, pageRules);
-```
-
-With a lot more complicated list of rules, we are able to parse url of:
-
-```url
-/plants/152883204915/qualityManagement/measurementData/components/21712526851768321/processes/39125230470234114
-```
-
-into a JSON tree:
-
-```json
-{
-  "name": "plants",
-  "matches": true,
-  "restPath": null,
-  "basePath": [
-    "plants",
-    "152883204915",
-    "qualityManagement",
-    "measurementData",
-    "components",
-    "21712526851768321",
-    "processes",
-    "39125230470234114"
-  ],
-  "data": {
-    "plantId": "152883204915"
-  },
-  "query": {},
-  "identityPath": "/plants/152883204915/qualityManagement/measurementData/components/21712526851768321/processes/39125230470234114?",
-  "next": {
-    "name": "qualityManagement",
-    "matches": true,
-    "restPath": null,
-    "basePath": [
-      "qualityManagement",
-      "measurementData",
-      "components",
-      "21712526851768321",
-      "processes",
-      "39125230470234114"
-    ],
-    "data": {},
-    "query": {},
-    "identityPath": "/qualityManagement/measurementData/components/21712526851768321/processes/39125230470234114?",
-    "next": {
-      "name": "measurementData",
-      "matches": true,
-      "restPath": null,
-      "basePath": ["measurementData", "components", "21712526851768321", "processes", "39125230470234114"],
-      "data": {
-        "componentId": "21712526851768321",
-        "processId": "39125230470234114"
-      },
-      "query": {},
-      "identityPath": "/measurementData/components/21712526851768321/processes/39125230470234114?",
-      "next": null
-    }
-  }
-}
-```
+Type interface for data parsed from url path:
 
 ```ts
 export interface IRouteParseResult {
@@ -144,7 +196,9 @@ export interface IRouteParseResult {
 }
 ```
 
-Also several helper components:
+### Controller
+
+components for triggering path change:
 
 ```tsx
 <HashLink to="/" text="DEMO" />
@@ -153,7 +207,11 @@ Also several helper components:
 <HashRedirect to="/" delay={1.2} />
 ```
 
-Find a target route operator:
+Normally the path can be long and writing by hand is erroneous. Our solution is generating methods from the rules defined above with the library [router-code-generator](https://github.com/jimengio/router-code-generator/).
+
+### Helpers
+
+Find a target route operator from generated router methods:
 
 ```tsx
 findRouteTarget(genRouter.a.b, "c");

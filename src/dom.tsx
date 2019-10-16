@@ -31,7 +31,7 @@ export let HashRedirect: FC<{
     clearInterval(timing.current);
 
     timing.current = setTimeout(() => {
-      window.location.hash = props.to;
+      window.location.replace(`${window.location.origin}#${props.to}`);
     }, delay);
 
     return () => {

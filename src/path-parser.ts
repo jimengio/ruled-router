@@ -132,7 +132,11 @@ let parseSegments = (
   query: { [k: string]: string }
 ): IRouteParseResult => {
   let cacheKey = `${segments.join("/")}+${basePath.join("/")}+?${queryString.stringify(query)}`;
-  let identityPath = `/${segments.join("/")}?${queryString.stringify(query)}`;
+
+  let identityPath: string = `/${segments.join("/")}`;
+  if (Object.keys(query).length > 0) {
+    identityPath = `${identityPath}?${queryString.stringify(query)}`;
+  }
 
   if (_DEV_) {
     // console.warn('Ignoring parsing caches during DEV')

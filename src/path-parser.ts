@@ -17,7 +17,11 @@ interface ISimpleObject {
   [k: string]: string;
 }
 
-export interface IRouteParseResult<IParams = ISimpleObject, IQuery = ISimpleObject> {
+interface IQueryObject {
+  [k: string]: string | string[];
+}
+
+export interface IRouteParseResult<IParams = ISimpleObject, IQuery = IQueryObject> {
   matches: boolean;
   name: string;
   raw: string;
@@ -129,7 +133,7 @@ let parseSegments = (
   basePath: string[],
   originalRules: IRouteRule[],
   params: any,
-  query: { [k: string]: string }
+  query: { [k: string]: string | string[] }
 ): IRouteParseResult => {
   let cacheKey = `${segments.join("/")}+${basePath.join("/")}+?${queryString.stringify(query)}`;
 
@@ -204,7 +208,9 @@ export let parseRoutePath = (pathString: string, definedrules: IRouteRule[]): IR
   let [pathPart, queryPart] = pathString.split("?");
   let segments = pathPart.split("/").filter(x => x !== "");
 
-  return parseSegments(segments, definedrules, [], definedrules, {}, queryString.parse(queryPart) as {
-    [k: string]: string;
+  return parseSegments(segments, definedrules, [], definedrules, {}, queryString.parse(queryPart, {
+    arrayFormat: "bracket"
+  }) as {
+    [k: string]: string | string[];
   });
 };

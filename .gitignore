@@ -1,3 +1,14 @@
-
 node_modules/
-lib/
+typings/
+.idea/
+.vscode/
+dist/
+webpack/dll/*
+.awcache/
+
+.DS_Store
+*.swp
+*.log
+
+.cache-loader/*
+lib/*

@@ -23,7 +23,7 @@ export let HashRedirect: FC<{
   delay?: number;
   className?: string;
 }> = props => {
-  let timing = useRef(null as number);
+  let timing = useRef(null as NodeJS.Timeout);
   let delay = (props.delay || 0.8) * 1000;
 
   useEffect(() => {

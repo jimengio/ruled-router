@@ -11,7 +11,7 @@
     "test": "yarn jest",
     "format": "prettier src/path-parser.ts --write",
     "compile": "rm -rfv lib/* && tsc -d --project tsconfig-compile.json --outDir lib/",
-    "prepare": "yarn compile"
+    "prepare": "yarn test && yarn compile"
   },
   "repository": {
     "type": "git",

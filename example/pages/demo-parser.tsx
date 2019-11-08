@@ -5,7 +5,7 @@ import { JimoButton } from "@jimengio/jimo-basics";
 import { parseRoutePath, IRouteParseResult } from "../../src/path-parser";
 import { routerRules } from "../models/router-rules";
 
-let Home: FC<{}> = React.memo(props => {
+let DemoParser: FC<{}> = React.memo(props => {
   let [rulesCode, setRulesCode] = useState(JSON.stringify(routerRules, null, 2));
   let [pathString, setPathString] = useState("/content");
   let [parseResult, setParseResult] = useState(null);
@@ -45,7 +45,7 @@ let Home: FC<{}> = React.memo(props => {
   }
 
   return (
-    <div className={cx(fullscreen, row, styleContainer)}>
+    <div className={cx(expand, row, styleContainer)}>
       <textarea
         className={cx(expand, styleTextarea)}
         value={rulesCode}
@@ -92,7 +92,7 @@ let Home: FC<{}> = React.memo(props => {
   );
 });
 
-export default Home;
+export default DemoParser;
 
 let simplifyResult = (result: IRouteParseResult) => {
   if (result == null) {

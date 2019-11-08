@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { css, cx } from "emotion";
 import { fullscreen, column, row, expand, Space, rowMiddle } from "@jimengio/flex-styles";
 import { JimoButton } from "@jimengio/jimo-basics";
@@ -7,19 +7,41 @@ import { routerRules } from "../models/router-rules";
 
 let Home: FC<{}> = React.memo(props => {
   let [rulesCode, setRulesCode] = useState(JSON.stringify(routerRules, null, 2));
-  let [pathString, setPathString] = useState("");
+  let [pathString, setPathString] = useState("/content");
   let [parseResult, setParseResult] = useState(null);
   let [slimMode, setSlimMode] = useState(true);
 
   /** Methods */
+
+  let runParser = (rules: string, path: string) => {
+    try {
+      let result = parseRoutePath(path, JSON.parse(rulesCode));
+      setParseResult(result);
+    } catch (error) {
+      console.error(error);
+      setParseResult({ error: error.message });
+    }
+  };
+
   /** Effects */
+
+  useEffect(() => {
+    runParser(rulesCode, pathString);
+  }, []);
+
   /** Renderers */
 
   let tree: string;
-  if (slimMode) {
-    tree = JSON.stringify(simplifyResult(parseResult), null, 2);
+
+  if (parseResult && parseResult.error != null) {
+    // if there error, just display error
+    tree = parseResult.error;
   } else {
-    tree = JSON.stringify(parseResult, null, 2);
+    if (slimMode) {
+      tree = JSON.stringify(simplifyResult(parseResult), null, 2);
+    } else {
+      tree = JSON.stringify(parseResult, null, 2);
+    }
   }
 
   return (
@@ -29,6 +51,9 @@ let Home: FC<{}> = React.memo(props => {
         value={rulesCode}
         onChange={event => setRulesCode(event.target.value)}
         placeholder={"Router rules in JSON..."}
+        onBlur={() => {
+          runParser(rulesCode, pathString);
+        }}
       />
       <Space width={8} />
       <div className={cx(expand, column)}>
@@ -41,8 +66,7 @@ let Home: FC<{}> = React.memo(props => {
               let path = event.target.value;
               setPathString(path);
 
-              let result = parseRoutePath(path, JSON.parse(rulesCode));
-              setParseResult(result);
+              runParser(rulesCode, path);
             }}
           />
           <Space width={8} />
@@ -56,7 +80,13 @@ let Home: FC<{}> = React.memo(props => {
           <span>Slim mode</span>
         </div>
         <Space height={16} />
-        <textarea className={cx(expand, styleTextarea)} value={tree} />
+        <textarea
+          className={cx(expand, styleTextarea)}
+          value={tree}
+          onChange={() => {
+            console.warn("disabled editing");
+          }}
+        />
       </div>
     </div>
   );

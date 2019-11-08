@@ -13,6 +13,8 @@ import { GenRouterTypeMain } from "./controller/generated-router";
 const renderApp = () => {
   let routerTree = parseRoutePath(window.location.hash.slice(1), routerRules) as GenRouterTypeMain;
 
+  console.log("tree", routerTree);
+
   ReactDOM.render(<Container router={routerTree} />, document.querySelector(".app"));
 };
 

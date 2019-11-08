@@ -2,7 +2,7 @@ import queryString from "query-string";
 
 type Id = string;
 
-function switchPath(x: string) {
+export function switchPath(x: string) {
   location.hash = `#${x}`;
 }
 
@@ -12,58 +12,46 @@ function qsStringify(queries: { [k: string]: any }) {
 
 // generated
 
-// Generated with router-code-generator@0.2.5-a1
+// Generated with router-code-generator@0.2.5
 
 export let genRouter = {
-  home: {
-    name: "home",
-    raw: "home",
-    path: () => `/home`,
-    go: () => switchPath(`/home`),
+  parser: {
+    name: "parser",
+    raw: "parser",
+    path: () => `/parser`,
+    go: () => switchPath(`/parser`)
   },
-  content: {
-    name: "content",
-    raw: "content",
-    path: () => `/content`,
-    go: () => switchPath(`/content`),
-  },
-  else: {
-    name: "else",
-    raw: "else",
-    path: () => `/else`,
-    go: () => switchPath(`/else`),
+  dom: {
+    name: "dom",
+    raw: "dom",
+    path: () => `/dom`,
+    go: () => switchPath(`/dom`)
   },
   $: {
-    name: "home",
+    name: "parser",
     raw: "",
     path: () => `/`,
-    go: () => switchPath(`/`),
-  },
+    go: () => switchPath(`/`)
+  }
 };
 
-export type GenRouterTypeMain = GenRouterTypeTree["home"] | GenRouterTypeTree["content"] | GenRouterTypeTree["else"] | GenRouterTypeTree["$"];
+export type GenRouterTypeMain = GenRouterTypeTree["parser"] | GenRouterTypeTree["dom"] | GenRouterTypeTree["$"];
 
 export interface GenRouterTypeTree {
-  home: {
-    name: "home";
+  parser: {
+    name: "parser";
     params: {};
     query: {};
     next: null;
   };
-  content: {
-    name: "content";
-    params: {};
-    query: {};
-    next: null;
-  };
-  else: {
-    name: "else";
+  dom: {
+    name: "dom";
     params: {};
     query: {};
     next: null;
   };
   $: {
-    name: "home";
+    name: "parser";
     params: {};
     query: {};
     next: null;

@@ -124,3 +124,9 @@ test("test parsing path with no rules", () => {
   let goal: ISimplifiedResult = { name: "404", next: null, params: {}, query: {}, identityPath: "/m" };
   expect(actual).toEqual(goal);
 });
+
+test("test array in query", () => {
+  let actual = simplifyResult(parseRoutePath("/a?a[]=1", rules));
+  let goal: ISimplifiedResult = { name: "a", next: null, params: {}, query: { a: ["1"] }, identityPath: "/a?a[]=1" };
+  expect(actual).toEqual(goal);
+});

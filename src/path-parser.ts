@@ -135,11 +135,13 @@ let parseSegments = (
   params: any,
   query: { [k: string]: string | string[] }
 ): IRouteParseResult => {
-  let cacheKey = `${segments.join("/")}+${basePath.join("/")}+?${queryString.stringify(query)}`;
+  let cacheKey = `${segments.join("/")}+${basePath.join("/")}+?${queryString.stringify(query, {
+    arrayFormat: "bracket"
+  })}`;
 
   let identityPath: string = `/${segments.join("/")}`;
   if (Object.keys(query).length > 0) {
-    identityPath = `${identityPath}?${queryString.stringify(query)}`;
+    identityPath = `${identityPath}?${queryString.stringify(query, { arrayFormat: "bracket" })}`;
   }
 
   if (_DEV_) {

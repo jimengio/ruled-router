@@ -1,9 +1,9 @@
 {
   "name": "@jimengio/ruled-router",
-  "version": "0.2.19",
+  "version": "0.2.20-a1",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
-  "main": "./lib/path-parser.js",
-  "types": "./lib/path-parser.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "directories": {
     "lib": "lib"
   },
@@ -19,7 +19,7 @@
     "gen-router": "ts-node -P tsconfig-node.json -r tsconfig-paths/register example/gen-router.ts",
     "postinstall": "rm -rfv node_modules/@types/*/node_modules/@types/react",
     "test": "yarn jest",
-    "format": "prettier src/path-parser.ts --write",
+    "format": "prettier src/*.ts --write",
     "compile": "rm -rfv lib/* && tsc -d --project tsconfig-compile.json --outDir lib/",
     "prepare": "yarn test && yarn compile"
   },
@@ -44,16 +44,16 @@
   },
   "devDependencies": {
     "@jimengio/ci-progress-webpack-plugin": "^0.1.0",
-    "@jimengio/doc-frame": "^0.1.5",
+    "@jimengio/doc-frame": "^0.1.7",
     "@jimengio/flex-styles": "^0.1.6",
-    "@jimengio/jimo-basics": "^0.0.1-a4",
+    "@jimengio/jimo-basics": "^0.0.1",
     "@jimengio/router-code-generator": "^0.2.5-a1",
     "@jimengio/ruled-router": "^0.2.19",
     "@jimengio/shared-utils": "^0.1.5",
-    "@types/jest": "^24.0.22",
-    "@types/lodash": "^4.14.145",
-    "@types/node": "^12.12.6",
-    "@types/prettier": "^1.18.3",
+    "@types/jest": "^24.0.23",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^12.12.11",
+    "@types/prettier": "^1.18.4",
     "@types/query-string": "^6.3.0",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
@@ -72,15 +72,15 @@
     "jest": "^24.9.0",
     "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.8.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "query-string": "^6.8.3",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "style-loader": "^1.0.0",
     "thread-loader": "^2.1.3",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.2.1",
-    "ts-node": "^8.4.1",
+    "ts-node": "^8.5.2",
     "tsconfig-paths": "^3.9.0",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "typescript": "^3.7.2",
@@ -93,6 +93,6 @@
     "webpack-hud": "^0.1.2"
   },
   "dependencies": {
-    "query-string": "^6.8.3"
+    "query-string": "^6.9.0"
   }
 }

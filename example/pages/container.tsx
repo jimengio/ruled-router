@@ -32,7 +32,7 @@ const renderChildPage = (routerTree: GenRouterTypeMain) => {
       case "parser":
         return <DemoParser />;
       case "dom":
-        return <DemoDOM />;
+        return <DemoDOM router={routerTree.next} />;
       default:
         return (
           <HashRedirect to={genRouter.parser.path()} delay={2}>

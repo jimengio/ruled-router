@@ -3,6 +3,7 @@ import React, { FC, useEffect, useRef } from "react";
 export let HashLink: FC<{
   to: string;
   text?: string;
+  title?: string;
   className?: string;
 }> = props => {
   return (
@@ -11,6 +12,8 @@ export let HashLink: FC<{
         event.preventDefault();
         window.location.hash = props.to;
       }}
+      href={`#${props.to}`}
+      title={props.title}
       className={props.className}
     >
       {props.text || props.children}
@@ -21,10 +24,11 @@ export let HashLink: FC<{
 export let HashRedirect: FC<{
   to: string;
   delay?: number;
+  noDelay?: boolean;
   className?: string;
 }> = props => {
   let timing = useRef(null as NodeJS.Timeout);
-  let delay = (props.delay ?? 0.4) * 1000;
+  let delay = props.noDelay ? 0 : (props.delay != null ? props.delay : 0.4) * 1000;
 
   useEffect(() => {
     // in case there is an old timer

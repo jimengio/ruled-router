@@ -2,3 +2,13 @@
 node_modules/
 src/*
 yarn.lock
+.vscode
+diagram
+dist
+webpack
+.prettierrc
+jest.config.js
+template.ejs
+tsconfig*
+example
+types.md

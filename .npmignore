@@ -10,3 +10,5 @@ webpack
 jest.config.js
 template.ejs
 tsconfig*
+example
+types.md

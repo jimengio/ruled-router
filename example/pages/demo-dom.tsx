@@ -18,7 +18,7 @@ import { HashRedirect } from "@jimengio/ruled-router";
 </HashRedirect>
 `;
 
-let content = `跳转的默认时间是 0.4s, 设置 \`delay={0}\` 关闭跳转时间.`;
+let content = `跳转的默认时间是 0.4s, 设置 \`delay={0}\` 关闭跳转时间. 或者通过 \`noDelay\` 关闭延时`;
 
 let DemoDOM: FC<{
   router: GenRouterTypeTree["dom"];

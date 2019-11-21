@@ -21,10 +21,11 @@ export let HashLink: FC<{
 export let HashRedirect: FC<{
   to: string;
   delay?: number;
+  noDelay?: boolean;
   className?: string;
 }> = props => {
   let timing = useRef(null as NodeJS.Timeout);
-  let delay = (props.delay ?? 0.4) * 1000;
+  let delay = props.noDelay ? 0 : (props.delay != null ? props.delay : 0.4) * 1000;
 
   useEffect(() => {
     // in case there is an old timer

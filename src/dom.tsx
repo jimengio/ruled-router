@@ -11,6 +11,7 @@ export let HashLink: FC<{
         event.preventDefault();
         window.location.hash = props.to;
       }}
+      href={`#${props.to}`}
       className={props.className}
     >
       {props.text || props.children}

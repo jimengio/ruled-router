@@ -3,6 +3,7 @@ import React, { FC, useEffect, useRef } from "react";
 export let HashLink: FC<{
   to: string;
   text?: string;
+  title?: string;
   className?: string;
 }> = props => {
   return (
@@ -12,6 +13,7 @@ export let HashLink: FC<{
         window.location.hash = props.to;
       }}
       href={`#${props.to}`}
+      title={props.title}
       className={props.className}
     >
       {props.text || props.children}

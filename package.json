@@ -1,6 +1,6 @@
 {
   "name": "@jimengio/ruled-router",
-  "version": "0.2.21",
+  "version": "0.2.22-a1",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -39,7 +39,6 @@
   "peerDependencies": {
     "@types/react": "*",
     "immer": "*",
-    "lodash": "*",
     "react": "*"
   },
   "devDependencies": {
@@ -51,7 +50,7 @@
     "@jimengio/ruled-router": "^0.2.19",
     "@jimengio/shared-utils": "^0.1.5",
     "@types/jest": "^24.0.23",
-    "@types/lodash": "^4.14.149",
+    "@types/lodash-es": "^4.17.3",
     "@types/node": "^12.12.11",
     "@types/prettier": "^1.18.4",
     "@types/query-string": "^6.3.0",
@@ -70,7 +69,6 @@
     "http-server": "^0.11.0",
     "immer": "^5.0.0",
     "jest": "^24.9.0",
-    "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.8.0",
     "prettier": "^1.19.1",
     "query-string": "^6.8.3",
@@ -93,6 +91,7 @@
     "webpack-hud": "^0.1.2"
   },
   "dependencies": {
+    "lodash-es": "^4.17.15",
     "query-string": "^6.9.0"
   }
 }

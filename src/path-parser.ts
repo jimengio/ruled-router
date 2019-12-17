@@ -1,4 +1,4 @@
-import { first, isEmpty, assign } from "lodash";
+import { first, isEmpty, assign } from "lodash-es";
 import produce from "immer";
 import * as queryString from "query-string";
 
@@ -210,9 +210,16 @@ export let parseRoutePath = (pathString: string, definedrules: IRouteRule[]): IR
   let [pathPart, queryPart] = pathString.split("?");
   let segments = pathPart.split("/").filter(x => x !== "");
 
-  return parseSegments(segments, definedrules, [], definedrules, {}, queryString.parse(queryPart, {
-    arrayFormat: "bracket"
-  }) as {
-    [k: string]: string | string[];
-  });
+  return parseSegments(
+    segments,
+    definedrules,
+    [],
+    definedrules,
+    {},
+    queryString.parse(queryPart, {
+      arrayFormat: "bracket"
+    }) as {
+      [k: string]: string | string[];
+    }
+  );
 };

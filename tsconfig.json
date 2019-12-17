@@ -17,6 +17,7 @@
     "declarationDir": "./lib",
     "paths": {},
     "outDir": "./lib",
+    "allowJs": true,
     "plugins": []
   },
   "exclude": ["**/*.test.ts", "lib/*"]

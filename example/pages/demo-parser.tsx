@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import { css, cx } from "emotion";
 import { fullscreen, column, row, expand, Space, rowMiddle } from "@jimengio/flex-styles";
 import { JimoButton } from "@jimengio/jimo-basics";
-import { parseRoutePath, IRouteParseResult } from "../../src/path-parser";
+import { parseRoutePath, IRouteParseResult, dangerouslyResetCaches } from "../../src/path-parser";
 import { routerRules } from "../models/router-rules";
 
 let DemoParser: FC<{}> = React.memo(props => {
@@ -13,7 +13,7 @@ let DemoParser: FC<{}> = React.memo(props => {
 
   /** Methods */
 
-  let runParser = (rules: string, path: string) => {
+  let runParser = (path: string) => {
     try {
       let result = parseRoutePath(path, JSON.parse(rulesCode));
       setParseResult(result);
@@ -26,7 +26,7 @@ let DemoParser: FC<{}> = React.memo(props => {
   /** Effects */
 
   useEffect(() => {
-    runParser(rulesCode, pathString);
+    runParser(pathString);
   }, []);
 
   /** Renderers */
@@ -52,7 +52,8 @@ let DemoParser: FC<{}> = React.memo(props => {
         onChange={event => setRulesCode(event.target.value)}
         placeholder={"Router rules in JSON..."}
         onBlur={() => {
-          runParser(rulesCode, pathString);
+          dangerouslyResetCaches();
+          runParser(pathString);
         }}
       />
       <Space width={8} />
@@ -66,7 +67,7 @@ let DemoParser: FC<{}> = React.memo(props => {
               let path = event.target.value;
               setPathString(path);
 
-              runParser(rulesCode, path);
+              runParser(path);
             }}
           />
           <Space width={8} />

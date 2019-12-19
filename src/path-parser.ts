@@ -127,6 +127,11 @@ if (_DEV_) {
   (window as any).devSegmentsParsingCaches = segmentsParsingCaches;
 }
 
+export let dangerouslyResetCaches = () => {
+  console.warn("Rules changed. Resetting parser caches!");
+  segmentsParsingCaches = {};
+};
+
 let parseSegments = (
   segments: string[],
   usingRules: IRouteRule[],
@@ -185,6 +190,13 @@ let parseSegments = (
     });
 
     if (parseResult.matches) {
+      if (rule0.path === "" && usingRules.length > 1) {
+        console.warn("Caution: rules found after empty rule, it might be a bug, check your router rules!", usingRules);
+      }
+      if (rule0.path[0] === ":" && usingRules.length > 1) {
+        console.warn("Caution: rules found after variable, it might be a bug, check yout router rules!", usingRules);
+      }
+
       let toReturn = produce(parseResultWithParams, (draft: IRouteParseResult) => {
         draft.next = parseSegments(
           parseResult.restPath,

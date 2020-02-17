@@ -2,6 +2,7 @@ import React, { FC, useEffect, useRef } from "react";
 
 export let HashLink: FC<{
   to: string;
+  noHashPrefix?: boolean; // No default "#" prefix required
   text?: string;
   title?: string;
   className?: string;
@@ -12,7 +13,7 @@ export let HashLink: FC<{
         event.preventDefault();
         window.location.hash = props.to;
       }}
-      href={`#${props.to}`}
+      href={props.noHashPrefix ? props.to : `#${props.to}`}
       title={props.title}
       className={props.className}
     >

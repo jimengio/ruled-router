@@ -1,6 +1,6 @@
 {
   "name": "@jimengio/ruled-router",
-  "version": "0.2.24-a1",
+  "version": "0.2.24-a2",
   "description": "Router parser designed and customized for web apps in JiMeng.io",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

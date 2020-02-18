@@ -11,6 +11,12 @@ export let HashLink: FC<{
     <a
       onClick={event => {
         event.preventDefault();
+
+        if (props.noHashPrefix) {
+          window.location.href = props.to;
+          return;
+        }
+
         window.location.hash = props.to;
       }}
       href={props.noHashPrefix ? props.to : `#${props.to}`}

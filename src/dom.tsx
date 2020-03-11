@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useRef } from "react";
 
+import { cx, css } from "emotion";
+
 export let HashLink: FC<{
   to: string;
   noHashPrefix?: boolean; // No default "#" prefix required
@@ -21,7 +23,7 @@ export let HashLink: FC<{
       }}
       href={props.noHashPrefix ? props.to : `#${props.to}`}
       title={props.title}
-      className={props.className}
+      className={cx(props.className, styleAButton)}
     >
       {props.text || props.children}
     </a>
@@ -78,3 +80,10 @@ export let findRouteTarget = (branch: { [name: string]: any }, path: string): Fa
   console.warn("Found no matching route item:", path, "in", branch);
   return null;
 };
+
+let styleAButton = css`
+  color: #3674ff;
+  &:hover {
+    color: #729dff;
+  }
+`;

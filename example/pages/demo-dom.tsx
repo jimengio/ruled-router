@@ -21,8 +21,8 @@ import { HashRedirect } from "@jimengio/ruled-router";
 let content = `跳转的默认时间是 0.4s, 设置 \`delay={0}\` 关闭跳转时间. 或者通过 \`noDelay\` 关闭延时`;
 
 let DemoDOM: FC<{
-  router: GenRouterTypeTree["dom"];
-}> = React.memo(props => {
+  router: GenRouterTypeTree["dom"]["next"];
+}> = React.memo((props) => {
   /** Methods */
   /** Effects */
   /** Renderers */

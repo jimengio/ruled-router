@@ -8,14 +8,14 @@ import { parseRoutePath } from "../src/path-parser";
 import { routerRules } from "./models/router-rules";
 
 import Container from "./pages/container";
-import { GenRouterTypeMain } from "./controller/generated-router";
+import { GenRouterTypeTree } from "./controller/generated-router";
 
 const renderApp = () => {
-  let routerTree = parseRoutePath(window.location.hash.slice(1), routerRules) as GenRouterTypeMain;
+  let routerTree = parseRoutePath(window.location.hash.slice(1), routerRules);
 
   console.log("tree", routerTree);
 
-  ReactDOM.render(<Container router={routerTree} />, document.querySelector(".app"));
+  ReactDOM.render(<Container router={routerTree as any} />, document.querySelector(".app"));
 };
 
 window.onload = renderApp;

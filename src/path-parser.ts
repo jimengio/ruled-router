@@ -56,7 +56,7 @@ let parseRuleIterate = (
       data: data,
       params: {},
       rule: rule,
-      query: null
+      query: null,
     };
   }
 
@@ -64,7 +64,7 @@ let parseRuleIterate = (
   let r0 = first(ruleSteps);
 
   if (r0[0] === ":") {
-    let newData = produce(data, draft => {
+    let newData = produce(data, (draft) => {
       draft[r0.slice(1)] = s0;
     });
     return parseRuleIterate(newData, segments.slice(1), ruleSteps.slice(1), rule, basePath.concat([s0]));
@@ -80,7 +80,7 @@ let parseRuleIterate = (
       identityPath: null,
       data: null,
       params: {},
-      query: null
+      query: null,
     };
   }
 };
@@ -99,7 +99,7 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
       data: null,
       params: {},
       rule: rule,
-      query: null
+      query: null,
     };
   }
 
@@ -115,7 +115,7 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
       identityPath: null,
       data: null,
       params: {},
-      query: null
+      query: null,
     };
   }
 
@@ -141,7 +141,7 @@ let parseSegments = (
   query: { [k: string]: string | string[] }
 ): IRouteParseResult => {
   let cacheKey = `${segments.join("/")}+${basePath.join("/")}+?${queryString.stringify(query, {
-    arrayFormat: "bracket"
+    arrayFormat: "bracket",
   })}`;
 
   let identityPath: string = `/${segments.join("/")}`;
@@ -172,7 +172,7 @@ let parseSegments = (
         basePath: basePath,
         identityPath,
         definedRules: originalRules,
-        query
+        query,
       };
 
       console.warn("No rule found for the path", result);
@@ -182,10 +182,10 @@ let parseSegments = (
   } else {
     let rule0: IRouteRule = first(usingRules);
     let parseResult = parseWithRule(rule0, segments, basePath);
-    let nextParams = produce(params, draft => {
+    let nextParams = produce(params, (draft) => {
       assign(draft, parseResult.data);
     });
-    let parseResultWithParams = produce(parseResult, draft => {
+    let parseResultWithParams = produce(parseResult, (draft) => {
       draft.params = nextParams as any;
     });
 
@@ -220,7 +220,7 @@ let parseSegments = (
 
 export let parseRoutePath = (pathString: string, definedrules: IRouteRule[]): IRouteParseResult => {
   let [pathPart, queryPart] = pathString.split("?");
-  let segments = pathPart.split("/").filter(x => x !== "");
+  let segments = pathPart.split("/").filter((x) => x !== "");
 
   return parseSegments(
     segments,
@@ -229,7 +229,7 @@ export let parseRoutePath = (pathString: string, definedrules: IRouteRule[]): IR
     definedrules,
     {},
     queryString.parse(queryPart, {
-      arrayFormat: "bracket"
+      arrayFormat: "bracket",
     }) as {
       [k: string]: string | string[];
     }

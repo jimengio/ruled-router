@@ -18,25 +18,25 @@ let trackingCode = "";
 module.exports = {
   mode: "production",
   entry: {
-    main: ["./example/main.tsx"]
+    main: ["./example/main.tsx"],
   },
   output: {
     filename: "[name].[chunkhash:8].js",
-    path: path.join(__dirname, "../dist")
+    path: path.join(__dirname, "../dist"),
   },
   devtool: "none",
   optimization: {
     minimize: true,
     namedModules: true,
     chunkIds: "named",
-    splitChunks: splitChunks
+    splitChunks: splitChunks,
   },
   module: {
-    rules: [matchExtractCssRule, matchFontsRule, matchTsReleaseRule]
+    rules: [matchExtractCssRule, matchFontsRule, matchTsReleaseRule],
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
-    modules: [path.join(__dirname, "../example"), "node_modules"]
+    modules: [path.join(__dirname, "../example"), "node_modules"],
   },
   stats: {
     all: false,
@@ -46,33 +46,33 @@ module.exports = {
     performance: true,
     reasons: true,
     timings: true,
-    warnings: true
+    warnings: true,
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true, async: false }),
+    new ForkTsCheckerWebpackPlugin({ async: false }),
     new MiniCssExtractPlugin({
       filename: "[name].[hash:8].css",
-      chunkFilename: "[name].[chunkhash:8].css"
+      chunkFilename: "[name].[chunkhash:8].css",
     }),
     new webpack.DllReferencePlugin({
-      manifest: path.resolve(__dirname, "dll/manifest-release.json")
+      manifest: path.resolve(__dirname, "dll/manifest-release.json"),
     }),
     new webpack.DefinePlugin({
       "process.env": {
-        NODE_ENV: JSON.stringify("production")
-      }
+        NODE_ENV: JSON.stringify("production"),
+      },
     }),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "template.ejs",
-      trackingCode
+      trackingCode,
     }),
     new HtmlWebpackTagsPlugin({
       tags: [`${dllManifest.name}.js`],
-      append: false
+      append: false,
     }),
     new DuplicatePackageCheckerPlugin(),
-    new ProgressPlugin({ interval: 600 })
+    new ProgressPlugin({ interval: 600 }),
     // new BundleAnalyzerPlugin(),
-  ]
+  ],
 };

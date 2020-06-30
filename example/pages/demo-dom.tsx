@@ -1,8 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { css } from "emotion";
 import { DocDemo, DocSnippet, DocBlock } from "@jimengio/doc-frame";
 import { HashLink, HashRedirect } from "../../src/dom";
-import { GenRouterTypeMain, GenRouterTypeTree } from "../controller/generated-router";
+import { GenRouterTypeMain, GenRouterTypeTree, genRouter } from "../controller/generated-router";
+import { JimoButton } from "@jimengio/jimo-basics";
+import { attachRuledRouterThemeVariables } from "../../src/theme";
+import { Space } from "@jimengio/flex-styles";
 
 let code = `
 import { HashLink } from "@jimengio/ruled-router";
@@ -23,6 +26,8 @@ let content = `跳转的默认时间是 0.4s, 设置 \`delay={0}\` 关闭跳转�
 let DemoDOM: FC<{
   router: GenRouterTypeTree["dom"]["next"];
 }> = React.memo((props) => {
+  let [loop, forceLoop] = useState();
+
   /** Methods */
   /** Effects */
   /** Renderers */
@@ -34,6 +39,21 @@ let DemoDOM: FC<{
       >
         <DocSnippet code={code} />
         <HashLink to="a" text={"fake link to #/a"} />
+
+        <Space height={40} />
+        <div>
+          <DocBlock content={contentTheme} />
+          <JimoButton
+            text={"调整主题"}
+            onClick={() => {
+              attachRuledRouterThemeVariables({
+                link: styleRedLink,
+              });
+              forceLoop(null);
+            }}
+          />
+          <DocSnippet code={codeTheme} />
+        </div>
       </DocDemo>
 
       <DocDemo
@@ -52,3 +72,21 @@ let DemoDOM: FC<{
 });
 
 export default DemoDOM;
+
+let styleRedLink = css`
+  color: hsl(0, 80%, 70%);
+
+  &:hover {
+    color: hsl(0, 80%, 80%);
+  }
+`;
+
+let codeTheme = `
+attachRuledRouterThemeVariables({
+  link: styleRedLink,
+});  
+`;
+
+let contentTheme = `
+链接支持样式的定制.
+`;

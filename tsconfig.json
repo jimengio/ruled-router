@@ -12,7 +12,6 @@
     "jsx": "react",
     "lib": ["es2016", "dom"],
     "types": ["node", "jest"],
-    "baseUrl": "./src/",
     "declaration": true,
     "declarationDir": "./lib",
     "paths": {},

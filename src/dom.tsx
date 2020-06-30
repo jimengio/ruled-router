@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef } from "react";
 
 import { cx, css } from "emotion";
+import { GlobalThemeVariables } from "./theme";
 
 export let HashLink: FC<{
   to: string;
@@ -8,10 +9,10 @@ export let HashLink: FC<{
   text?: string;
   title?: string;
   className?: string;
-}> = props => {
+}> = (props) => {
   return (
     <a
-      onClick={event => {
+      onClick={(event) => {
         event.preventDefault();
 
         if (props.noHashPrefix) {
@@ -23,7 +24,7 @@ export let HashLink: FC<{
       }}
       href={props.noHashPrefix ? props.to : `#${props.to}`}
       title={props.title}
-      className={cx(props.className, styleAButton)}
+      className={cx(styleAButton, GlobalThemeVariables.link, props.className)}
     >
       {props.text || props.children}
     </a>
@@ -35,7 +36,7 @@ export let HashRedirect: FC<{
   delay?: number;
   noDelay?: boolean;
   className?: string;
-}> = props => {
+}> = (props) => {
   let timing = useRef(null as NodeJS.Timeout);
   let delay = props.noDelay ? 0 : (props.delay != null ? props.delay : 0.4) * 1000;
 

@@ -37,7 +37,7 @@ export interface IRouteParseResult<IParams = ISimpleObject, IQuery = IQueryObjec
 }
 
 let parseRuleIterate = (
-  data: any,
+  data: Record<string, string>,
   segments: string[],
   ruleSteps: string[],
   rule: IRouteRule,
@@ -64,7 +64,7 @@ let parseRuleIterate = (
   let r0 = first(ruleSteps);
 
   if (r0[0] === ":") {
-    let newData = produce(data, (draft) => {
+    let newData = produce(data, (draft: Record<string, string>) => {
       draft[r0.slice(1)] = s0;
     });
     return parseRuleIterate(newData, segments.slice(1), ruleSteps.slice(1), rule, basePath.concat([s0]));
@@ -122,7 +122,7 @@ let parseWithRule = (rule: IRouteRule, segments: string[], basePath: string[]): 
   return parseRuleIterate({}, segments, ruleSteps, rule, basePath);
 };
 
-var segmentsParsingCaches = {};
+var segmentsParsingCaches: Record<string, any> = {};
 if (_DEV_) {
   (window as any).devSegmentsParsingCaches = segmentsParsingCaches;
 }
@@ -182,7 +182,7 @@ let parseSegments = (
   } else {
     let rule0: IRouteRule = first(usingRules);
     let parseResult = parseWithRule(rule0, segments, basePath);
-    let nextParams = produce(params, (draft) => {
+    let nextParams = produce(params, (draft: Record<string, string>) => {
       assign(draft, parseResult.data);
     });
     let parseResultWithParams = produce(parseResult, (draft) => {

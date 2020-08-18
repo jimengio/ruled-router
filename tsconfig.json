@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": false,
     "noEmitOnError": true,
@@ -14,7 +14,6 @@
     "types": ["node", "jest"],
     "declaration": true,
     "declarationDir": "./lib",
-    "paths": {},
     "outDir": "./lib",
     "plugins": []
   },

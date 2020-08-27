@@ -36,7 +36,6 @@
   "homepage": "https://github.com/beego/ruled-router#readme",
   "peerDependencies": {
     "@types/react": "*",
-    "immer": "*",
     "react": "*"
   },
   "devDependencies": {
@@ -62,7 +61,6 @@
     "fork-ts-checker-webpack-plugin": "^5.0.14",
     "html-webpack-plugin": "^4.3.0",
     "html-webpack-tags-plugin": "^2.0.17",
-    "immer": "^7.0.7",
     "jest": "^26.4.0",
     "mini-css-extract-plugin": "^0.10.0",
     "prettier": "^2.0.5",

@@ -8,27 +8,27 @@ let { matchCssRule, matchFontsRule } = require("./shared");
 
 module.exports = {
   mode: "production",
-  entry: ["react", "react-dom", "emotion", "immer", "dayjs"],
+  entry: ["react", "react-dom", "emotion", "dayjs"],
   output: {
     filename: "dll_vendors_[hash:8].js",
     path: path.join(__dirname, "../dist"),
-    library: "dll_vendors_[hash:8]"
+    library: "dll_vendors_[hash:8]",
   },
   devtool: "none",
   module: {
-    rules: [matchCssRule, matchFontsRule]
+    rules: [matchCssRule, matchFontsRule],
   },
   optimization: {
-    minimize: true
+    minimize: true,
   },
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/),
     new webpack.NamedModulesPlugin(),
     new webpack.DllPlugin({
       name: "dll_vendors_[hash:8]",
-      path: path.join(__dirname, "dll/manifest-release.json")
+      path: path.join(__dirname, "dll/manifest-release.json"),
     }),
-    new DuplicatePackageCheckerPlugin()
+    new DuplicatePackageCheckerPlugin(),
     // new BundleAnalyzerPlugin(),
-  ]
+  ],
 };

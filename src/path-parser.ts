@@ -1,5 +1,4 @@
 import { first, isEmpty, assign } from "lodash-es";
-import produce from "immer";
 import * as queryString from "query-string";
 
 let _DEV_: boolean = false;
@@ -64,9 +63,7 @@ let parseRuleIterate = (
   let r0 = first(ruleSteps);
 
   if (r0[0] === ":") {
-    let newData = produce(data, (draft: Record<string, string>) => {
-      draft[r0.slice(1)] = s0;
-    });
+    let newData = { ...data, [r0.slice(1)]: s0 };
     return parseRuleIterate(newData, segments.slice(1), ruleSteps.slice(1), rule, basePath.concat([s0]));
   } else if (s0 === r0) {
     return parseRuleIterate(data, segments.slice(1), ruleSteps.slice(1), rule, basePath.concat([s0]));
@@ -137,7 +134,7 @@ let parseSegments = (
   usingRules: IRouteRule[],
   basePath: string[],
   originalRules: IRouteRule[],
-  params: any,
+  params: Record<string, string>,
   query: { [k: string]: string | string[] }
 ): IRouteParseResult => {
   let cacheKey = `${segments.join("/")}+${basePath.join("/")}+?${queryString.stringify(query, {
@@ -182,12 +179,8 @@ let parseSegments = (
   } else {
     let rule0: IRouteRule = first(usingRules);
     let parseResult = parseWithRule(rule0, segments, basePath);
-    let nextParams = produce(params, (draft: Record<string, string>) => {
-      assign(draft, parseResult.data);
-    });
-    let parseResultWithParams = produce(parseResult, (draft) => {
-      draft.params = nextParams as any;
-    });
+    let nextParams = { ...params, ...parseResult.data };
+    let parseResultWithParams = { ...parseResult, params: nextParams };
 
     if (parseResult.matches) {
       if (rule0.path === "" && usingRules.length > 1) {
@@ -197,18 +190,21 @@ let parseSegments = (
         console.warn("Caution: rules found after variable, it might be a bug, check yout router rules!", usingRules);
       }
 
-      let toReturn = produce(parseResultWithParams, (draft: IRouteParseResult) => {
-        draft.next = parseSegments(
-          parseResult.restPath,
-          rule0.next,
-          parseResult.basePath,
-          rule0.next,
-          nextParams,
-          query
-        );
-        draft.query = query;
-        draft.identityPath = identityPath;
-      });
+      let parsedNext = parseSegments(
+        parseResult.restPath,
+        rule0.next,
+        parseResult.basePath,
+        rule0.next,
+        nextParams,
+        query
+      );
+      let toReturn = {
+        ...parseResultWithParams,
+        next: parsedNext,
+        query: query,
+        identityPath: identityPath,
+      };
+
       // console.log("To return", toReturn);
       segmentsParsingCaches[cacheKey] = toReturn;
       return toReturn;
